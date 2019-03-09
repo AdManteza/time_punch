@@ -1,5 +1,7 @@
 # README
 
+Small App for Teachers to clock-in and clock-out of their Daycare centre. 
+
 To run locally:
 1) Clone this repo. `git@github.com:AdManteza/time_punch.git`
 2) `cd` to the cloned repo location
