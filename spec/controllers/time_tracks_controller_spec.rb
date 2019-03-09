@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe TimeTracksController do
   describe '#new' do
@@ -11,58 +11,38 @@ RSpec.describe TimeTracksController do
   end
 
   describe '#create' do
-    let(:time_track_params) do
-      {
-        time_track: {
-          teacher_id: 1,
-          clock_in: Time.now,
-          clock_out: nil
-        }
-      }
-    end
+    let(:teacher)           { create(:teacher) }
+    let(:time_track_params) { attributes_for(:time_track).merge(teacher_id: teacher.id) }
 
     it 'creates a new Time Track for a Teacher' do
       expect do
-        post :create, params: time_track_params
+        post :create, format: :json, params: { time_track: time_track_params }
       end.to change(TimeTrack, :count).by(1)
     end
   end
 
   describe '#update' do
-    let(:teacher) { Teacher.find(1) }
-    let(:time_track_params) do
-      {
-        time_track: {
-          teacher_id: teacher.id,
-          clock_in: Time.now - 60.minutes.ago,
-          clock_out: Time.now
-        }
-      }
+    let(:teacher)   { create(:teacher) }
+    let(:clock_in)  { Time.zone.now - 1.hour.ago }
+    let(:clock_out) { Time.zone.now }
+    let(:time_track) do
+      create(:time_track, teacher: teacher, clock_in: clock_in, clock_out: nil)
     end
 
     it 'updates the Time Track for a Teacher' do
-      put :update, params: time_track_params
+      put :update, params: { id: time_track.id, time_track: { clock_out: clock_out} }
 
-      expect(teacher.reload.clock_in).to eq(time_track_params[:clock_in])
-      expect(teacher.reload.clock_out).to eq(time_track_params[:clock_out])
+      expect(teacher.reload.clock_in).to eq(time_track.clock_in)
+      expect(teacher.reload.clock_out).to eq(clock_out)
     end
   end
 
   describe '#destroy' do
-    let(:teacher) { Teacher.find(1) }
-    let(:time_track_params) do
-      {
-        time_track: {
-          teacher_id: teacher.id,
-          clock_in: Time.now - 60.minutes.ago,
-          clock_out: Time.now
-        }
-      }
-    end
+    let(:time_track) { create(:time_track) }
 
     it 'destroys the Time Track for a Teacher' do
       expect do
-        delete :destroy, params: time_track_params
+        delete :destroy, id: time_track.id
       end.to change(TimeTrack, :count).by(-1)
     end
   end
