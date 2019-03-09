@@ -27,4 +27,43 @@ RSpec.describe TimeTracksController do
       end.to change(TimeTrack, :count).by(1)
     end
   end
+
+  describe '#update' do
+    let(:teacher) { Teacher.find(1) }
+    let(:time_track_params) do
+      {
+        time_track: {
+          teacher_id: teacher.id,
+          clock_in: Time.now - 60.minutes.ago,
+          clock_out: Time.now
+        }
+      }
+    end
+
+    it 'updates the Time Track for a Teacher' do
+      put :update, params: time_track_params
+
+      expect(teacher.reload.clock_in).to eq(time_track_params[:clock_in])
+      expect(teacher.reload.clock_out).to eq(time_track_params[:clock_out])
+    end
+  end
+
+  describe '#destroy' do
+    let(:teacher) { Teacher.find(1) }
+    let(:time_track_params) do
+      {
+        time_track: {
+          teacher_id: teacher.id,
+          clock_in: Time.now - 60.minutes.ago,
+          clock_out: Time.now
+        }
+      }
+    end
+
+    it 'destroys the Time Track for a Teacher' do
+      expect do
+        delete :destroy, params: time_track_params
+      end.to change(TimeTrack, :count).by(-1)
+    end
+  end
 end

@@ -1,11 +1,18 @@
 class TimeTracksController < ApplicationController
-  before_action :teacher, only: [:create]
+  before_action :teacher, only: [:create, :update]
 
   def new
     @time_track = TimeTrack.new
   end
 
   def create
+  end
+
+  def update
+  end
+
+  def destroy
+
   end
 
 private
