@@ -11,7 +11,7 @@ class TimeTracksController < ApplicationController
   end
 
   def create
-    @time_track = TimeTrack.new(time_track_params)
+    @time_track = teacher.time_tracks.build(time_track_params)
 
     respond_to do |format|
       if @time_track.save
@@ -32,25 +32,26 @@ class TimeTracksController < ApplicationController
     end
   end
 
-  def destroy
-    time_track.destroy
-  end
-
 private
 
   def teacher
-    @teacher ||= Teacher.find(time_track_params[:teacher_id])
+    @teacher ||= Teacher.find(params[:teacher_id])
   rescue ActiveRecord::RecordNotFound => boom
     render json: boom.message, status: :unprocessable_entity
   end
 
+  # find the time_track that the teacher
+  # will be clocking_out from
   def time_track
-    @time_track ||= TimeTrack.find(params[:id])
+    @time_track ||= begin
+      teacher.time_tracks.
+        for_date(time_track_params[:clock_out].to_date).
+        no_clock_out.first
+    end
   end
 
   def time_track_params
     params.fetch(:time_track).permit(
-      :teacher_id,
       :clock_in,
       :clock_out
     )

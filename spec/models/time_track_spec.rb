@@ -41,16 +41,4 @@ RSpec.describe TimeTrack do
       expect(subject).to_not be_valid
     end
   end
-
-  context 'scope for a Teacher clock_in at a particular date' do
-    let(:clock_in_for_today)     { 'Sat, 09 Mar 2019 09:00:00 GMT' }
-    let(:clock_in_for_yesterday) { 'Sat, 08 Mar 2019 09:00:00 GMT' }
-    let(:time_track_clock_in_for_today)     { create(:time_track, teacher_id: teacher.id, clock_in: clock_in_for_today, clock_out: nil) }
-    let(:time_track_clock_in_for_yesterday) { create(:time_track, teacher_id: teacher.id, clock_in: clock_in_for_yesterday, clock_out: nil) }
-
-    it 'returns the clock_in record for a Teacher at a particular date' do
-      scope = described_class.teacher_clock_in_for_date(teacher, clock_in_for_today.to_date)
-      expect(scope).to match_array([time_track_clock_in_for_today])
-    end
-  end
 end

@@ -2,15 +2,19 @@ class TimeTrack < ApplicationRecord
   belongs_to :teacher
 
   validates_presence_of :teacher_id, :clock_in
-  validate :clocking_out, :clocking_in
+  validate :clock_out_after_clock_in
+  validate :clocking_in, on: :create
 
-  scope :teacher_clock_in_for_date, -> (teacher, date) do
-    where(teacher_id: teacher.id).
-      where('clock_in BETWEEN ? AND ?', date.to_date.beginning_of_day, date.to_date.end_of_day)
+  scope :for_date, -> (date) do
+    where('clock_in BETWEEN ? AND ?', date.to_date.beginning_of_day, date.to_date.end_of_day)
+  end
+
+  scope :for_teacher, -> (teacher) do
+    where(teacher_id: teacher.id)
   end
 
   scope :no_clock_out, -> do
-    where('clock_in IS NOT NULL AND clock_out IS NULL')
+    where.not(clock_in: nil).where(clock_out: nil)
   end
 
   def clocked_in_datetime
@@ -23,7 +27,7 @@ class TimeTrack < ApplicationRecord
 
 private
 
-  def clocking_out
+  def clock_out_after_clock_in
     return unless clock_in.present? && clock_out.present?
 
     if clock_out < clock_in
@@ -38,7 +42,8 @@ private
   end
 
   def did_not_clock_out_previously?
-    TimeTrack.teacher_clock_in_for_date(teacher, clock_in.to_date).
+    self.class.for_date(clock_in.to_date).
+      for_teacher(teacher).
       no_clock_out.present?
   end
 end
