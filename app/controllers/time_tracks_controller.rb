@@ -19,6 +19,13 @@ class TimeTracksController < ApplicationController
   end
 
   def update
+    respond_to do |format|
+      if time_track.update(time_track_params)
+        format.json { render json: time_track }
+      else
+        format.json { render json: time_track.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def destroy
