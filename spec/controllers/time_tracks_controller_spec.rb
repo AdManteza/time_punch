@@ -12,12 +12,32 @@ RSpec.describe TimeTracksController do
 
   describe '#create' do
     let(:teacher)           { create(:teacher) }
-    let(:time_track_params) { attributes_for(:time_track).merge(teacher_id: teacher.id) }
+    let(:time_track_params) { attributes_for(:time_track) }
 
     it 'creates a new Time Track for a Teacher' do
       expect do
-        post :create, format: :json, params: { time_track: time_track_params }
+        post :create, format: :json, params: { time_track: time_track_params.merge(teacher_id: teacher.id) }
       end.to change(TimeTrack, :count).by(1)
+    end
+
+    it 'raises an error if there is no teacher' do
+      expect do
+        post :create, format: :json, params: { time_track: time_track_params.merge(teacher_id: nil) }
+      end.to_not change(TimeTrack, :count)
+
+      expect(response.status).to eq 422
+      expect(response.body).to be_truthy
+    end
+
+    it 'raises an error if there is an error in saving' do
+      expect_any_instance_of(TimeTrack).to receive(:save).and_return(false)
+
+      expect do
+        post :create, format: :json, params: { time_track: time_track_params.merge(teacher_id: teacher.id) }
+      end.to_not change(TimeTrack, :count)
+
+      expect(response.status).to eq 422
+      expect(response.body).to be_truthy
     end
   end
 
