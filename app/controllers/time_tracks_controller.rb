@@ -33,7 +33,7 @@ class TimeTracksController < ApplicationController
   end
 
   def destroy
-
+    time_track.destroy
   end
 
 private

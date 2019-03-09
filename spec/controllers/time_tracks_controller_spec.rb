@@ -108,11 +108,11 @@ RSpec.describe TimeTracksController do
   end
 
   describe '#destroy' do
-    let(:time_track) { create(:time_track) }
-
     it 'destroys the Time Track for a Teacher' do
+      time_track = create(:time_track)
+
       expect do
-        delete :destroy, id: time_track.id
+        delete :destroy, params: { id: time_track.id }
       end.to change(TimeTrack, :count).by(-1)
     end
   end
