@@ -1,5 +1,12 @@
 # README
 
+A.) To run locally
+1) Clone this repo.
+2) `cd` to the cloned repo location
+3) `rake db:setup`
+4) `rake db:migrate`
+5) `foreman start`
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
