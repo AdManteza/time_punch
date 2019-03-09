@@ -1,6 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe TimeTracksController do
+  describe '#index' do
+    it 'should be ok' do
+      get :index
+
+      expect(response).to render_template(:index)
+      expect(assigns(:time_tracks)).to be_truthy
+    end
+  end
+
   describe '#new' do
     it 'should be ok' do
       get :new
