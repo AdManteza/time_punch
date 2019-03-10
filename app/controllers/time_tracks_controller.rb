@@ -1,9 +1,12 @@
 class TimeTracksController < ApplicationController
   before_action :teacher, only: [:create, :update]
   before_action :time_track, only: [:update]
+  before_action :time_tracks, only: [:index]
 
   def index
-    @time_tracks = TimeTrack.all
+    respond_to do |format|
+      format.json { render json: @time_tracks }
+    end
   end
 
   def new
@@ -69,6 +72,10 @@ private
     message = 'Time Track not found!'
 
     render json: [message], status: :unprocessable_entity
+  end
+
+  def time_tracks
+    @time_tracks ||= TimeTrack.includes(:teacher)
   end
 
   def validation_errors(time_track_errors)
