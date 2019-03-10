@@ -6836,6 +6836,11 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue-digital-clock@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/vue-digital-clock/-/vue-digital-clock-2.0.0.tgz#894c9a1f852d5bb0ea51039cedb0bca50237bcd5"
+  integrity sha512-uOvJr5FKkWkkzlfnEn2KCt+D+QCkmAdd+ZanBZkOJJnUBYy+tYlYoWsCB/Nz0Z2GaZ5VEqIO8cvnyWKNoXANBA==
+
 vue-functional-data-merge@^2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-2.0.7.tgz#bdee655181eacdcb1f96ce95a4cc14e75313d1da"
