@@ -20,13 +20,13 @@ RSpec.describe TimeTracksController do
   end
 
   describe '#create' do
-    let(:teacher)           { create(:teacher) }
-    let(:time_track_params) { attributes_for(:time_track) }
+    let(:teacher)  { create(:teacher) }
+    let(:clock_in) { 'Sat, 09 Mar 2019 09:00:00 GMT' }
 
     context 'everything is fine' do
       it 'creates a new Time Track for a Teacher' do
         expect do
-          post :create, format: :json, params: { time_track: time_track_params.merge(teacher_id: teacher.id) }
+          post :create, format: :json, params: { teacher_id: teacher.time_punch_code, time_track: { clock_in: clock_in } }
         end.to change(TimeTrack, :count).by(1)
       end
     end
@@ -34,7 +34,7 @@ RSpec.describe TimeTracksController do
     context 'cannot find the Teacher' do
       it 'raises an error' do
         expect do
-          post :create, format: :json, params: { time_track: time_track_params.merge(teacher_id: 0) }
+          post :create, format: :json, params: { teacher_id: 0, time_track: { clock_in: clock_in } }
         end.to_not change(TimeTrack, :count)
 
         expect(response.status).to eq 422
@@ -47,7 +47,7 @@ RSpec.describe TimeTracksController do
         expect_any_instance_of(TimeTrack).to receive(:save).and_return(false)
 
         expect do
-          post :create, format: :json, params: { time_track: time_track_params.merge(teacher_id: teacher.id) }
+          post :create, format: :json, params: { teacher_id: teacher.time_punch_code, time_track: { clock_in: clock_in } }
         end.to_not change(TimeTrack, :count)
 
         expect(response.status).to eq 422
@@ -60,22 +60,12 @@ RSpec.describe TimeTracksController do
     let(:teacher)   { create(:teacher) }
     let(:clock_in)  { 'Sat, 09 Mar 2019 09:00:00 GMT' }
     let(:clock_out) { 'Sat, 09 Mar 2019 17:00:00 GMT' }
-    let(:time_track) do
-      create(:time_track, teacher_id: teacher.id, clock_in: clock_in, clock_out: nil)
-    end
-    let(:time_track_params) do
-      {
-        id: time_track.id,
-        time_track: {
-          teacher_id: teacher.id,
-          clock_out: clock_out
-        }
-      }
-    end
 
     context 'everything is fine' do
       it 'updates the Time Track for a Teacher' do
-        put :update, format: :json, params: time_track_params
+        time_track = create(:time_track, teacher_id: teacher.id, clock_in: clock_in, clock_out: nil)
+
+        put :update, format: :json, params: { teacher_id: teacher.time_punch_code, time_track: { clock_out: clock_out } }
 
         expect(time_track.reload.clock_in).to eq(clock_in)
         expect(time_track.reload.clock_out).to eq(clock_out)
@@ -84,7 +74,9 @@ RSpec.describe TimeTracksController do
 
     context 'cannot find the Teacher' do
       it 'raises an error' do
-        put :update, format: :json, params: time_track_params.deep_merge(time_track: { teacher_id: 0 })
+        time_track = create(:time_track, teacher_id: teacher.id, clock_in: clock_in, clock_out: nil)
+
+        put :update, format: :json, params: { teacher_id: 0, time_track: { clock_out: clock_out } }
 
         expect(response.status).to eq 422
         expect(response.body).to be_truthy
@@ -95,25 +87,17 @@ RSpec.describe TimeTracksController do
 
     context 'error on update' do
       it 'raises an error' do
+        time_track = create(:time_track, teacher_id: teacher.id, clock_in: clock_in, clock_out: nil)
+
         expect_any_instance_of(TimeTrack).to receive(:update).and_return(false)
 
-        put :update, format: :json, params: time_track_params
+        put :update, format: :json, params: { teacher_id: teacher.time_punch_code, time_track: { clock_out: clock_out } }
 
         expect(response.status).to eq 422
         expect(response.body).to be_truthy
         expect(time_track.reload.clock_in).to eq(clock_in)
         expect(time_track.reload.clock_out).not_to eq(clock_out)
       end
-    end
-  end
-
-  describe '#destroy' do
-    it 'destroys the Time Track for a Teacher' do
-      time_track = create(:time_track)
-
-      expect do
-        delete :destroy, params: { id: time_track.id }
-      end.to change(TimeTrack, :count).by(-1)
     end
   end
 end
