@@ -1,6 +1,8 @@
 # README
 
 Small App for Teachers to clock-in and clock-out of their Daycare centre. 
+Teachers are each issued a unique 6-digit alphanumeric code, which they then use to "clock in"
+or "clock out".
 
 To run locally:
 1) Clone this repo. `git@github.com:AdManteza/time_punch.git`
