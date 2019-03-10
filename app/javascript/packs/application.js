@@ -29,6 +29,9 @@ import clockin from '../time_tracks/clock_in.vue'
 import clockout from '../time_tracks/clock_out.vue'
 import timetracks from '../time_tracks/index.vue'
 
+// Global events
+Vue.prototype.$eventHub = new Vue()
+
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 

@@ -68,7 +68,9 @@
 
         return promise.then((data) => {
           this.closeForm()
-          console.log(`${this.timePunchCode} CLOCKED OUT!`)
+          let successMessage = `Successful Clock Out for ${data.body.first_name}`
+
+          this.$eventHub.$emit('successful-clock-in-clock-out', successMessage)
         }).catch(error => {
           this.errors = error.body
         })

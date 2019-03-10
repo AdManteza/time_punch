@@ -7,15 +7,14 @@
               @dismissed="showSucessMessage=0">
       <p>{{successMessage}}</p>
     </b-alert>
+    <h5>Time Tracks</h5>
     <b-table id="time-tracking-table"
              show-empty
              striped
+             fixed
              responsive
              no-provider-paging
              hover
-             :sort-by.sync="sortBy"
-             :sort-desc.sync="sortDesc"
-             :busy.sync="isBusy"
              :fields="fields"
              :items="timeTracks"
              :current-page="currentPage"
@@ -46,12 +45,18 @@
         perPage: 10,
         pageOptions: [ 5, 10, 15 ],
         showSucessMessage: 0,
-        successMessage: '',
-        isBusy: false
+        successMessage: ''
       }
     },
     mounted () {
       this.getTimeTracks()
+    },
+    created () {
+      this.$eventHub.$on('successful-clock-in-clock-out', message => {
+        this.getTimeTracks()
+        this.successMessage = message
+        this.showSucessMessage = 10 //in seconds
+      })
     },
     methods: {
       getTimeTracks () {
@@ -60,10 +65,7 @@
         return promise.then((data) => {
           this.totalRows  = data.body.length
           this.timeTracks = data.body
-          this.isBusy     = false
         }).catch(error => {
-          this.isBusy = false
-
           return []
         })
       }
