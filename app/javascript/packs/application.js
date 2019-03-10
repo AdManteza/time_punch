@@ -28,6 +28,7 @@ Vue.use(BootstrapVue)
 import clockin from '../time_tracks/clock_in.vue'
 import clockout from '../time_tracks/clock_out.vue'
 import timetracks from '../time_tracks/index.vue'
+import digitalclock from '../digital_clock.vue'
 
 // Global events
 Vue.prototype.$eventHub = new Vue()
@@ -38,7 +39,10 @@ document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
     el: '[data-behavior="vue"]',
     components: {
-      clockin, clockout, timetracks
+      clockin,
+      clockout,
+      timetracks,
+      digitalclock
     }
   })
 })
