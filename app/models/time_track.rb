@@ -17,13 +17,9 @@ class TimeTrack < ApplicationRecord
     where.not(clock_in: nil).where(clock_out: nil)
   end
 
-  def clocked_in_datetime
-    clock_in.strftime("%b %d %Y %I:%M %p")
-  end
-
-  def clocked_out_datetime
-    clock_out.strftime("%b %d %Y %I:%M %p")
-  end
+  # Hardcoded for now. Ideally we should be creating a model
+  # called "DayCareCentre" where time zone name is stored
+  DefaultTimeZone = 'Eastern Time (US & Canada)'.freeze
 
 private
 
