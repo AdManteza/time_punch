@@ -9,10 +9,6 @@ class TimeTracksController < ApplicationController
     end
   end
 
-  def new
-    @time_track = TimeTrack.new
-  end
-
   def create
     @time_track = teacher.time_tracks.build(time_track_params)
 
