@@ -3,19 +3,10 @@ require 'rails_helper'
 RSpec.describe TimeTracksController do
   describe '#index' do
     it 'should be ok' do
-      get :index
+      get :index, format: :json
 
-      expect(response).to render_template(:index)
+      expect(response).to be_ok
       expect(assigns(:time_tracks)).to be_truthy
-    end
-  end
-
-  describe '#new' do
-    it 'should be ok' do
-      get :new
-
-      expect(response).to render_template(:new)
-      expect(assigns(:time_track)).to be_truthy
     end
   end
 
