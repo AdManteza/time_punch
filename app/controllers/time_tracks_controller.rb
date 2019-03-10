@@ -47,18 +47,28 @@ private
 
       record
     end
-  rescue ActiveRecord::RecordNotFound => boom
-    render json: [boom.message], status: :unprocessable_entity
+  rescue ActiveRecord::RecordNotFound
+    message = 'Teacher not found!'
+
+    render json: [message], status: :unprocessable_entity
   end
 
   # find the time_track that the teacher
   # will be clocking_out from
   def time_track
     @time_track ||= begin
-      teacher.time_tracks.
-        for_date(time_track_params[:clock_out].to_date).
-        no_clock_out.first
+      record = teacher.time_tracks.
+               for_date(time_track_params[:clock_out].to_date).
+               no_clock_out.first
+
+      raise ActiveRecord::RecordNotFound if record.nil?
+
+      record
     end
+  rescue ActiveRecord::RecordNotFound
+    message = 'Time Track not found!'
+
+    render json: [message], status: :unprocessable_entity
   end
 
   def validation_errors(time_track_errors)
