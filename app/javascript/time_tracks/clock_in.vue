@@ -3,7 +3,8 @@
     <b-button v-b-modal.clockInModal
               ok-title="Clock In!"
               size="lg"
-              variant="primary">
+              variant="primary"
+              block>
       CLOCK IN
     </b-button>
 

@@ -3,7 +3,8 @@
     <b-button v-b-modal.clockOutModal
               ok-title="Clock Out!"
               size="lg"
-              variant="warning">
+              variant="warning"
+              block>
       CLOCK OUT
     </b-button>
 
