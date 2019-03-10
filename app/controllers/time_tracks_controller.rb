@@ -17,7 +17,9 @@ class TimeTracksController < ApplicationController
       if @time_track.save
         format.json { render json: @time_track }
       else
-        format.json { render json: @time_track.errors, status: :unprocessable_entity }
+        errors = validation_errors(@time_track.errors)
+
+        format.json { render json: errors, status: :unprocessable_entity }
       end
     end
   end
@@ -27,7 +29,9 @@ class TimeTracksController < ApplicationController
       if time_track.update(time_track_params)
         format.json { render json: time_track }
       else
-        format.json { render json: time_track.errors, status: :unprocessable_entity }
+        errors = validation_errors(time_track.errors)
+
+        format.json { render json: errors, status: :unprocessable_entity }
       end
     end
   end
@@ -37,7 +41,7 @@ private
   def teacher
     @teacher ||= Teacher.find(params[:teacher_id])
   rescue ActiveRecord::RecordNotFound => boom
-    render json: boom.message, status: :unprocessable_entity
+    render json: [boom.message], status: :unprocessable_entity
   end
 
   # find the time_track that the teacher
@@ -48,6 +52,10 @@ private
         for_date(time_track_params[:clock_out].to_date).
         no_clock_out.first
     end
+  end
+
+  def validation_errors(time_track_errors)
+    time_track_errors.values.flatten
   end
 
   def time_track_params
