@@ -1,6 +1,8 @@
 FactoryBot.define do
   factory :teacher do
-    name 'Teacher1'
+    first_name 'Drunken'
+    last_name 'Master'
+    time_punch_code { SecureRandom.hex(3).upcase }
   end
 
   factory :time_track do

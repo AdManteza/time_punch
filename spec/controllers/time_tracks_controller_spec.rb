@@ -26,7 +26,7 @@ RSpec.describe TimeTracksController do
     context 'everything is fine' do
       it 'creates a new Time Track for a Teacher' do
         expect do
-          post :create, format: :json, params: { teacher_id: teacher.id, time_track: { clock_in: clock_in } }
+          post :create, format: :json, params: { teacher_id: teacher.time_punch_code, time_track: { clock_in: clock_in } }
         end.to change(TimeTrack, :count).by(1)
       end
     end
@@ -47,7 +47,7 @@ RSpec.describe TimeTracksController do
         expect_any_instance_of(TimeTrack).to receive(:save).and_return(false)
 
         expect do
-          post :create, format: :json, params: { teacher_id: teacher.id, time_track: { clock_in: clock_in } }
+          post :create, format: :json, params: { teacher_id: teacher.time_punch_code, time_track: { clock_in: clock_in } }
         end.to_not change(TimeTrack, :count)
 
         expect(response.status).to eq 422
@@ -65,7 +65,7 @@ RSpec.describe TimeTracksController do
       it 'updates the Time Track for a Teacher' do
         time_track = create(:time_track, teacher_id: teacher.id, clock_in: clock_in, clock_out: nil)
 
-        put :update, format: :json, params: { teacher_id: teacher.id, time_track: { clock_out: clock_out } }
+        put :update, format: :json, params: { teacher_id: teacher.time_punch_code, time_track: { clock_out: clock_out } }
 
         expect(time_track.reload.clock_in).to eq(clock_in)
         expect(time_track.reload.clock_out).to eq(clock_out)
@@ -91,7 +91,7 @@ RSpec.describe TimeTracksController do
 
         expect_any_instance_of(TimeTrack).to receive(:update).and_return(false)
 
-        put :update, format: :json, params: { teacher_id: teacher.id, time_track: { clock_out: clock_out } }
+        put :update, format: :json, params: { teacher_id: teacher.time_punch_code, time_track: { clock_out: clock_out } }
 
         expect(response.status).to eq 422
         expect(response.body).to be_truthy

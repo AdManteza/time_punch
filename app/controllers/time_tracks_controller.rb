@@ -38,8 +38,15 @@ class TimeTracksController < ApplicationController
 
 private
 
+  # Find the teacher thru its Time Punch code
   def teacher
-    @teacher ||= Teacher.find(params[:teacher_id])
+    @teacher ||= begin
+      record = Teacher.find_by_time_punch_code(params[:teacher_id])
+
+      raise ActiveRecord::RecordNotFound if record.nil?
+
+      record
+    end
   rescue ActiveRecord::RecordNotFound => boom
     render json: [boom.message], status: :unprocessable_entity
   end
