@@ -27,6 +27,7 @@ Vue.use(BootstrapVue)
 // My components
 import clockin from '../time_tracks/clock_in.vue'
 import clockout from '../time_tracks/clock_out.vue'
+import timetracks from '../time_tracks/index.vue'
 
 document.addEventListener('turbolinks:load', () => {
   Vue.http.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -34,7 +35,7 @@ document.addEventListener('turbolinks:load', () => {
   const app = new Vue({
     el: '[data-behavior="vue"]',
     components: {
-      clockin, clockout
+      clockin, clockout, timetracks
     }
   })
 })
