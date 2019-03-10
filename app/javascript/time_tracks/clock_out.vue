@@ -12,21 +12,21 @@
              @cancel="clearForm"
              @shown="clearForm"
              @ok="handleOk"
-             v-bind:ok-disabled="!teacherIdValid"
+             v-bind:ok-disabled="!timePunchCodeValid"
              centered>
       <b-alert show variant="danger" v-if="errors.length">
         <li v-for="error in errors">
           {{ error }}
         </li>
       </b-alert>
-      <b-form-group label="Please Enter your unique Teacher ID"
-                    label-for="teacher-id">
-        <b-form-input id="teacher-id"
-                     v-model.trim="teacherId"
-                     :state="teacherIdValid"
+      <b-form-group label="Please Enter your unique Time Punch Code"
+                    label-for="time-punch-code">
+        <b-form-input id="time-punch-code"
+                     v-model.trim="timePunchCode"
+                     :state="timePunchCodeValid"
                      type="text"
                      aria-describedby="inputErrorFeedback"
-                     placeholder="Teacher ID"/>
+                     placeholder="Time Punch Code"/>
         <b-form-invalid-feedback id="inputErrorFeedback">
           This is a required field.
         </b-form-invalid-feedback>
@@ -38,19 +38,19 @@
 <script>
   export default {
     computed: {
-      teacherIdValid () {
-        return this.teacherId.length > 0 ? true : false
+      timePunchCodeValid () {
+        return this.timePunchCode.length > 0 ? true : false
       }
     },
     data() {
       return {
-        teacherId: '',
+        timePunchCode: '',
         errors: []
       }
     },
     methods: {
       clearForm () {
-        this.teacherId = ''
+        this.timePunchCode = ''
         this.errors = []
       },
       closeForm () {
@@ -62,12 +62,12 @@
         this.errors = []
 
         let clockOut = new Date
-        let params  = { clock_out: clockOut.toUTCString() }
-        let promise = this.$http.put(`/teachers/${this.teacherId}/time_tracks.json`, { time_track: params })
+        let params   = { clock_out: clockOut.toUTCString() }
+        let promise  = this.$http.put(`/teachers/${this.timePunchCode}/time_tracks.json`, { time_track: params })
 
         return promise.then((data) => {
           this.closeForm()
-          console.log(`${this.teacherId} CLOCKED OUT!`)
+          console.log(`${this.timePunchCode} CLOCKED OUT!`)
         }).catch(error => {
           this.errors = error.body
         })
